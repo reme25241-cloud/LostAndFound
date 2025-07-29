@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">All Found Reports</h2>
+
+  {% if reports %}
+    <div class="row g-4">
+      {% for report in reports %}
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow-sm border-warning">
+          {% if report.found_photo %}
+            <img src="{{ report.found_photo.url }}" class="card-img-top" alt="Found Photo" style="object-fit: cover; height: 200px;">
+          {% else %}
+            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
+              No Photo
+            </div>
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title text-warning">Item: {{ report.lost_item.item_description }}</h5>
+            <p class="mb-1"><strong>Finder:</strong> {{ report.finder_name }}</p>
+            <p class="mb-1"><strong>Contact:</strong> {{ report.contact_number }}</p>
+            <p class="mb-1"><strong>Location Found:</strong> {{ report.location_found }}</p>
+            <p class="mb-1"><strong>Date:</strong> {{ report.date_found }}</p>
+            <p class="mb-1"><strong>Time:</strong> {{ report.time_found }}</p>
+          </div>
+          <div class="card-footer text-muted small">
+            Reported At: {{ report.reported_at|date:"Y-m-d H:i" }}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center" role="alert">
+      No found reports available.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

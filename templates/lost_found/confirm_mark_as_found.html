@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="card p-4 mx-auto" style="max-width: 600px; background-color: #fff9db;">
+    <h4 class="mb-3 text-center">Mark as Found</h4>
+    <p>Are you sure you want to mark <strong>{{ item.item_description }}</strong> as <span class="text-success">Found</span>?</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="text-center">
+        <button type="submit" class="btn btn-success">Yes, Mark as Found</button>
+        <a href="{% url 'lost_items_list' %}" class="btn btn-secondary ms-2">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

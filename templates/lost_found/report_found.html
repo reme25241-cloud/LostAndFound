@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg p-4" style="background-color: #fff9db;">
+        <h3 class="text-center mb-4">Report Found Item</h3>
+        <p class="text-muted text-center">
+          <strong>Related to:</strong> {{ lost_item.item_description }}
+        </p>
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form|crispy }}
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-success mt-3 px-4">Submit Found Report</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

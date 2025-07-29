@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lost & Found Items{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Lost & Found Items</h2>
+
+    <!-- Filter Form -->
+    <form method="get" class="row justify-content-center mb-5 gx-2 gy-2">
+        <div class="col-md-4">
+            <input type="text" name="search" value="{{ request.GET.search }}" class="form-control" placeholder="Search by name, location...">
+        </div>
+        <div class="col-md-2">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for cat in category %}
+                    <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-dark"><i class="bi bi-filter"></i> Filter</button>
+        </div>
+    </form>
+
+    <!-- Lost Items Grid -->
+    <div class="row g-4">
+        {% for item in items %}
+        <div class="col-md-4">
+            <div class="card shadow-lg h-100 border-0"
+                 style="background-color: #fffde7;
+                        border-left: 6px solid 
+                            {% if item.item_category == 'electronics' %}#007bff
+                            {% elif item.item_category == 'clothing' %}#d63384
+                            {% elif item.item_category == 'stationery' %}#198754
+                            {% elif item.item_category == 'accessories' %}#fd7e14
+                            {% elif item.item_category == 'id_card' %}#6c757d
+                            {% else %}#adb5bd
+                            {% endif %};">
+                {% if item.item_photo %}
+                    <img src="{{ item.item_photo.url }}" class="card-img-top" alt="Lost Item">
+                {% else %}
+                    <img src="{% static 'images/no_image.png' %}" class="card-img-top" alt="No image available">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title text-primary">{{ item.full_name }}</h5>
+                    <p class="card-text"><strong>Date Lost:</strong> {{ item.date_lost }}</p>
+                    <p class="card-text"><strong>Location:</strong> {{ item.location_lost }}</p>
+                    <p class="card-text"><strong>Category:</strong> {{ item.get_item_category_display }}</p>
+                    <p class="card-text">{{ item.item_description|truncatewords:20 }}</p>
+                    <p class="card-text"><strong>Contact:</strong> {{ item.contact_info }}</p>
+
+                    {% if item.is_found %}
+                        <div class="alert alert-success text-center mt-2 p-2">
+                            ✅ Found on {{ item.found_timestamp|date:"d M Y, h:i A" }}
+                        </div>
+                    {% else %}
+                        {% if request.user == item.user %}
+                            <a href="{% url 'mark_as_found' item.id %}" class="btn btn-outline-primary w-100 mt-2">
+                                <i class="bi bi-check2-circle"></i> Mark as Found
+                            </a>
+                        {% else %}
+                            <a href="{% url 'report_found' item.id %}" class="btn btn-outline-success w-100 mt-2">
+                                <i class="bi bi-check-circle"></i> Found this?
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="card-footer small text-muted d-flex justify-content-between">
+                    Reported by {{ item.user.username }}
+                    <span>{{ item.reported_at|date:"d M Y, h:i A" }}</span>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <div class="alert alert-warning">No lost items found matching the criteria.</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if items.has_other_pages %}
+    <div class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+            {% if items.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ items.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">&laquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+
+            {% for page_num in items.paginator.page_range %}
+                <li class="page-item {% if items.number == page_num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page_num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+
+            {% if items.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ items.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}">&raquo;</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
