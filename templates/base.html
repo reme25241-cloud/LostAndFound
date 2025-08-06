@@ -100,48 +100,92 @@
 <canvas id="abstractBackground"></canvas>
 
 <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
-  <div class="container-fluid">
-    <a class="navbar-brand glow-text" href="/"><i class="bi bi-shop-window me-2"></i> Lost & Found </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+
+      <!-- Logo + Brand -->
+      <a class="navbar-brand d-flex align-items-center glow-text" href="/">
+        <img src="{% static 'logo/logo.jpg' %}" alt="logo" class="me-2" style="border-radius: 50%; height: 40px; width: 40px;">
+        <span>Lost & Found</span>
+      </a>
+
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+    </div>
 
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="bi bi-house-heart-fill me-1"></i> Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}"><i class="bi bi-info-circle-fill me-1"></i> About</a></li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-lines-fill me-1"></i> My Profile</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'profile' %}">Edit Info</a></li>
-            <li><a class="dropdown-item" href="{% url 'dashboard' %}">My Dashboard</a></li>
-            <li><a class="dropdown-item" href="{% url 'feedback' %}">Send Feedback</a></li>
-          </ul>
+
+        <!-- Home/Dashboard -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">
+            <i class="bi bi-house-heart-fill me-1"></i> Dashboard
+          </a>
         </li>
 
-        <li class="nav-item"><a class="nav-link" href="{% url 'terms_and_conditions' %}"><i class="bi bi-file-earmark-text me-1"></i> Legal</a></li>
-
+        <!-- Report & View Lost/Found -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <i class="bi bi-search-heart me-1"></i> Lost & Found
           </a>
           <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'lost_items_list' %}"><i class="bi bi-clipboard-check me-1"></i> Lost Items List</a></li>
 
-            <li><a class="dropdown-item" href="{% url 'dashboard' %}">List</a></li>
+            <li><a class="dropdown-item" href="{% url 'report_lost' %}"><i class="bi bi-exclamation-diamond me-1"></i> Report Lost Item</a></li>
+            <li><a class="dropdown-item" href="{% url 'found_report_list' %}"><i class="bi bi-check-circle me-1"></i> Found Items</a></li>
 
-            <li><a class="dropdown-item" href="{% url 'report_lost' %}">Report Lost Item</a></li>
 
-            <li><a class="dropdown-item" href="{% url 'lost_items_list' %}">Lost & Found List</a></li>
-
-            <li><a class="dropdown-item" href="{% url 'archived_items' %}">Archived Items</a></li>
-
-            <li><a class="dropdown-item" href="{% url 'found_report_list' %}">Found Items</a></li>
-
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'lost_items_list' %}"><i class="bi bi-list-ul me-1"></i> All Reports</a></li>
+            <li><a class="dropdown-item" href="{% url 'archived_items' %}"><i class="bi bi-archive-fill me-1"></i> Archived</a></li>
           </ul>
         </li>
 
+        <!-- About / Legal -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}">
+            <i class="bi bi-info-circle-fill me-1"></i> About
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'terms_and_conditions' %}">
+            <i class="bi bi-file-earmark-text me-1"></i> Legal
+          </a>
+        </li>
+
+        <!-- Profile Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-person-lines-fill me-1"></i> My Profile
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-pencil-square me-1"></i> Edit Info</a></li>
+            <li><a class="dropdown-item" href="{% url 'feedback' %}"><i class="bi bi-chat-dots me-1"></i> Send Feedback</a></li>
+            <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-1"></i> My Dashboard</a></li>
+          </ul>
+        </li>
+
+        {% if user.is_superuser %}
+        <!-- Admin Only -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-danger" href="#" role="button" data-bs-toggle="dropdown">
+            <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/admin/"><i class="bi bi-gear-fill me-1"></i> Admin Dashboard</a></li>
+            <li><a class="dropdown-item" href="{% url 'user_list' %}"><i class="bi bi-people-fill me-1"></i> Manage Users</a></li>
+            <li><a class="dropdown-item" href="{% url 'view_feedbacks' %}"><i class="bi bi-inbox-fill me-1"></i> View Feedback</a></li>
+            <li><a class="dropdown-item" href="{% url 'lost_items_list' %}"><i class="bi bi-card-list me-1"></i> All Lost Reports</a></li>
+            <li><a class="dropdown-item" href="{% url 'found_report_list' %}"><i class="bi bi-card-checklist me-1"></i> All Found Reports</a></li>
+          </ul>
+        </li>
+        {% endif %}
+
       </ul>
 
+      <!-- Right side: User info + login/logout -->
       <div class="d-flex justify-content-center align-items-center w-100 mt-2 mt-lg-0">
         {% if user.is_authenticated %}
           <span class="navbar-text me-3 glow-text">
@@ -159,73 +203,104 @@
           </a>
         {% endif %}
       </div>
-
     </div>
+
   </div>
 </nav>
 
 <!-- Main Content -->
 <div id="content" class="container-fluid">
   {% block content %}
-    <div class="container py-5">
-      <!-- Hero Section -->
-      <div class="row align-items-center">
-        <div class="col-lg-6 text-center text-lg-start">
-          <h1 class="display-4 fw-bold mb-3">
-            <i class="bi bi-search-heart text-primary me-2"></i>Welcome to Lost & Found Portal
-          </h1>
-          <p class="lead mb-4 text-muted">
-            A community-driven platform to report, find, and claim lost and found items around campus and beyond.
-          </p>
-          <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
-            <a href="{% url 'report_lost' %}" class="btn btn-primary rounded-pill">
-              <i class="bi bi-exclamation-diamond-fill me-1"></i> Report Lost Item
-            </a>
-            <!-- <a href="{% url 'report_lost' %}" class="btn btn-outline-success rounded-pill">
-              <i class="bi bi-box-seam-fill me-1"></i> Report Found Item
-            </a> -->
-          </div>
-        </div>
-        <!-- <div class="col-lg-6 text-center mt-4 mt-lg-0">
-          <img src="{% static 'img/lost-and-found.svg' %}" alt="Lost and Found" class="img-fluid" style="max-height: 380px;">
-        </div> -->
-      </div>
+    {% if user.is_superuser %}
+        <!-- Admin View: Responsive User Cards -->
+        <div class="container mt-4">
+          <h2 class="mb-4 text-center text-md-start">User List (Total: {{ total_users }})</h2>
 
-      <!-- Features Section -->
-      <div class="row text-center mt-5 pt-4 border-top">
-        <div class="col-md-4 mb-4">
-          <div class="shadow-sm rounded p-4 bg-light h-100">
-            <i class="bi bi-map-fill text-primary fs-1 mb-3"></i>
-            <h5 class="fw-semibold">Geo  Reports</h5>
-            <p class="text-muted">Specify the location where items were lost or found to improve matching accuracy.</p>
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            {% for user in users %}
+              <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <i class="bi bi-person-fill text-primary me-2"></i>{{ user.username }}
+                    </h5>
+                    <p class="card-text mb-1">
+                      <i class="bi bi-envelope-fill me-1 text-muted"></i><strong>Email:</strong> {{ user.email }}
+                    </p>
+                    <p class="card-text mb-1">
+                      <i class="bi bi-clock-history me-1 text-muted"></i><strong>Last Login:</strong>
+                      {{ user.last_login|date:"Y-m-d H:i" }}
+                    </p>
+                    <p class="card-text">
+                      <i class="bi bi-calendar-check-fill me-1 text-muted"></i><strong>Date Joined:</strong>
+                      {{ user.date_joined|date:"Y-m-d H:i" }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
           </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <div class="shadow-sm rounded p-4 bg-light h-100">
-            <i class="bi bi-chat-heart-fill text-success fs-1 mb-3"></i>
-            <h5 class="fw-semibold">Secure Messaging</h5>
-            <p class="text-muted">Connect with the item owner/finder safely through our built-in system.</p>
+    {% else %}
+      <!-- Non-admin View: Responsive Hero & Features -->
+      <div class="container py-5">
+        <!-- Hero Section -->
+        <div class="row align-items-center">
+          <div class="col-lg-6 col-12 text-center text-lg-start mb-4 mb-lg-0">
+            <h1 class="display-5 fw-bold mb-3">
+              <i class="bi bi-search-heart text-primary me-2"></i>Welcome to Lost & Found Portal
+            </h1>
+            <p class="lead mb-4 text-muted">
+              A community-driven platform to report, find, and claim lost and found items around campus and beyond.
+            </p>
+            <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
+              <a href="{% url 'report_lost' %}" class="btn btn-primary rounded-pill">
+                <i class="bi bi-exclamation-diamond-fill me-1"></i> Report Lost Item
+              </a>
+            </div>
+          </div>
+
+          <!-- Optional image for larger screens -->
+          <!-- <div class="col-lg-6 text-center">
+            <img src="{% static 'img/lost-and-found.svg' %}" alt="Lost and Found" class="img-fluid" style="max-height: 380px;">
+          </div> -->
+        </div>
+
+        <!-- Features Section -->
+        <div class="row text-center mt-5 pt-4 border-top">
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="shadow-sm rounded p-4 bg-light h-100">
+              <i class="bi bi-map-fill text-primary fs-1 mb-3"></i>
+              <h5 class="fw-semibold">Geo Reports</h5>
+              <p class="text-muted">Specify the location where items were lost or found to improve matching accuracy.</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-6 mb-4">
+            <div class="shadow-sm rounded p-4 bg-light h-100">
+              <i class="bi bi-chat-heart-fill text-success fs-1 mb-3"></i>
+              <h5 class="fw-semibold">Secure Messaging</h5>
+              <p class="text-muted">Connect with the item owner/finder safely through our built-in system.</p>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4">
+            <div class="shadow-sm rounded p-4 bg-light h-100">
+              <i class="bi bi-award-fill text-warning fs-1 mb-3"></i>
+              <h5 class="fw-semibold">Verified Users</h5>
+              <p class="text-muted">Only verified users can claim or return items to ensure authenticity and safety.</p>
+            </div>
           </div>
         </div>
-        <div class="col-md-4 mb-4">
-          <div class="shadow-sm rounded p-4 bg-light h-100">
-            <i class="bi bi-award-fill text-warning fs-1 mb-3"></i>
-            <h5 class="fw-semibold">Verified Users</h5>
-            <p class="text-muted">Only verified users can claim or return items to ensure authenticity and safety.</p>
-          </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-5">
+          <h4 class="fw-bold">Start your search or contribute today!</h4>
+          <p class="text-muted">Together, we can bring lost items back to their rightful owners.</p>
+          <a href="{% url 'dashboard' %}" class="btn btn-secondary rounded-pill">
+            <i class="bi bi-shop-window me-1"></i> Visit Marketplace
+          </a>
         </div>
       </div>
-
-      <!-- Call to Action -->
-      <div class="text-center mt-5">
-        <h4 class="fw-bold">Start your search or contribute today!</h4>
-        <p class="text-muted">Together, we can bring lost items back to their rightful owners.</p>
-        <a href="{% url 'dashboard' %}" class="btn btn-secondary rounded-pill">
-          <i class="bi bi-shop-window me-1"></i> Visit Marketplace
-        </a>
-      </div>
-    </div>
-
+    {% endif %}
   {% endblock %}
 </div>
 

@@ -10,24 +10,29 @@
         <div class="col-md-3">
             <input type="text" name="q" class="form-control" placeholder="Search by name or keyword" value="{{ request.GET.q }}">
         </div>
-        <!-- <div class="col-md-2">
+        
+        <div class="col-md-2">
             <select name="category" class="form-select">
                 <option value="">All Categories</option>
                 {% for key, value in category_choices %}
                     <option value="{{ key }}" {% if request.GET.category == key %}selected{% endif %}>{{ value }}</option>
                 {% endfor %}
             </select>
-        </div> -->
+        </div>
+
         <div class="col-md-2">
             <input type="text" name="location" class="form-control" placeholder="Location" value="{{ request.GET.location }}">
         </div>
+
         <div class="col-md-2">
             <input type="date" name="date" class="form-control" value="{{ request.GET.date }}">
         </div>
+
         <div class="col-md-2">
             <button class="btn btn-warning w-100" type="submit">Filter</button>
         </div>
     </form>
+
 
     <!-- My Reported Items -->
     {% for item in items %}
