@@ -12,7 +12,14 @@ from .forms import *
 from .models import *
 
 def base(request):
-    return render(request, 'base.html')
+    users = User.objects.all().order_by('-last_login')
+    total_users = users.count()
+    context = {
+        'users': users,
+        'total_users': total_users,
+    }
+
+    return render(request, 'base.html', context)
 
 from django.contrib.auth import get_user_model
 from .models import Message
@@ -23,6 +30,25 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib import messages
 from .forms import UserSignupForm  # Make sure this matches your form name
+
+# views.py
+
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
+
+User = get_user_model()
+
+@user_passes_test(lambda u: u.is_superuser)  # Only admin can access
+def user_list_view(request):
+    users = User.objects.all().order_by('-last_login')
+    total_users = users.count()
+    context = {
+        'users': users,
+        'total_users': total_users,
+    }
+    return render(request, 'admin/user_list.html', context)
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -168,7 +194,10 @@ def dashboard(request):
     if date_filter:
         items = items.filter(date_lost=date_filter)
 
-    context = {'items': items}
+    context = {
+        'items': items,
+        'category_choices': LostItem._meta.get_field('item_category').choices,  
+    }
     return render(request, 'dashboard/dashboard.html',context)
 
 
