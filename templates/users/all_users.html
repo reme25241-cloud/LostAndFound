@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}All Users{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">All Users and Profiles</h1>
+
+<div class="list-group">
+  {% for user in users %}
+    <div class="list-group-item d-flex justify-content-between align-items-start mb-2">
+      <div>
+        <h5 class="mb-1">{{ user.username }}</h5>
+        <p class="mb-1">
+          <strong>Email:</strong> {{ user.profile.email }} <br>
+          <strong>Contact:</strong> {{ user.profile.contact }} <br>
+          <strong>Age:</strong> {{ user.profile.age }} <br>
+          <strong>Gender:</strong> {{ user.profile.gender }} <br>
+          <strong>Address:</strong> {{ user.profile.address }}
+        </p>
+      </div>
+
+      <!-- Delete button -->
+      <form action="{% url 'delete_user' user.id %}" method="POST" onsubmit="return confirm('Are you sure you want to delete {{ user.username }}?');">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+      </form>
+    </div>
+  {% empty %}
+    <div class="list-group-item text-center text-muted">
+      No users found.
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

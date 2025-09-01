@@ -18,9 +18,15 @@
       min-height: 100%;
       font-family: 'Poppins', sans-serif;
       color: #111;
-      background: #d38621;
     }
 
+    body.admin {
+      background: #a1d7e7; /* Blue for Admin */
+    }
+
+    body.user {
+      background: #f7e55a; /* Yellow for User */
+    }
     canvas#abstractBackground {
       position: fixed;
       top: 0;
@@ -96,7 +102,7 @@
     }
   </style>
 </head>
-<body>
+<body class="{% if request.user.is_staff %}admin{% else %}user{% endif %}">
 <canvas id="abstractBackground"></canvas>
 
 <nav class="navbar navbar-expand-lg fixed-top shadow-sm">
@@ -174,8 +180,8 @@
             <i class="bi bi-shield-lock-fill me-1"></i> Admin Panel
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/admin/"><i class="bi bi-gear-fill me-1"></i> Admin Dashboard</a></li>
-            <li><a class="dropdown-item" href="{% url 'user_list' %}"><i class="bi bi-people-fill me-1"></i> Manage Users</a></li>
+            <!-- <li><a class="dropdown-item" href="/admin/"><i class="bi bi-gear-fill me-1"></i> Admin Dashboard</a></li> -->
+            <li><a class="dropdown-item" href="{% url 'all_users' %}"><i class="bi bi-people-fill me-1"></i> Manage Users</a></li>
             <li><a class="dropdown-item" href="{% url 'view_feedbacks' %}"><i class="bi bi-inbox-fill me-1"></i> View Feedback</a></li>
             <li><a class="dropdown-item" href="{% url 'lost_items_list' %}"><i class="bi bi-card-list me-1"></i> All Lost Reports</a></li>
             <li><a class="dropdown-item" href="{% url 'found_report_list' %}"><i class="bi bi-card-checklist me-1"></i> All Found Reports</a></li>
@@ -387,5 +393,4 @@
 </script>
 </body>
 </html>
-
 
