@@ -165,6 +165,31 @@ def view_feedbacks(request):
     else:
         return redirect('dashboard')
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)  # only staff/admin can access
+def all_users_view(request):
+    users = User.objects.select_related('profile').all()
+    return render(request, 'users/all_users.html', {'users': users})
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)  # only staff/admin can delete
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == "POST":
+        user.delete()
+        messages.success(request, "User deleted successfully.")
+        return redirect('all_users')  # redirect back to list
+
+    return render(request, 'users/confirm_delete.html', {'user': user})
+
+
 
 # product List
 

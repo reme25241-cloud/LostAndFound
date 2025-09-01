@@ -46,6 +46,9 @@ urlpatterns = [
     path('archived/', archived_items_view, name='archived_items'),
     path('found-reports/', found_report_list, name='found_report_list'),
     
+    path('all-users/', all_users_view, name='all_users'),
+    path('delete-user/<int:user_id>/', delete_user, name='delete_user'),
+    
 ] 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
