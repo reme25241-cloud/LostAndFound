@@ -162,6 +162,7 @@
         </li>
 
         <!-- Profile Dropdown -->
+        {% if user.is_authenticated and not user.is_staff and not user.is_superuser %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
             <i class="bi bi-person-lines-fill me-1"></i> My Profile
@@ -172,6 +173,8 @@
             <li><a class="dropdown-item" href="{% url 'dashboard' %}"><i class="bi bi-speedometer2 me-1"></i> My Dashboard</a></li>
           </ul>
         </li>
+        {% endif %}
+
 
         {% if user.is_superuser %}
         <!-- Admin Only -->
@@ -393,4 +396,5 @@
 </script>
 </body>
 </html>
+
 
